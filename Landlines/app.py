@@ -29,3 +29,7 @@ def addData():
         "id": 3
     })
     return '<h1>' + jsonify({"data": contacts}) + '<h1>'
+
+
+if __name__ == "__main__":
+    app.run(debug=True)

@@ -18,7 +18,7 @@ contacts = [
 
 @app.route('/', methods=['GET'])
 def showData():
-    return '<h1>'+contacts+'<h1>'
+    return jsonify({"data": contacts})
 
 
 @app.route('/addData', methods=['POST'])
@@ -28,7 +28,7 @@ def addData():
         "Contact": "1029384756",
         "id": 3
     })
-    return '<h1>' + jsonify({"data": contacts}) + '<h1>'
+    return jsonify({"data": contacts})
 
 
 if __name__ == "__main__":

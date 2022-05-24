@@ -30,6 +30,11 @@ def addData():
     })
     return jsonify({"data": contacts})
 
+@app.route('/deleteData', methods=['DELETE'])
+def delete():
+    contacts.pop(1)
+
+    return jsonify({'data':contacts})
 
 if __name__ == "__main__":
     app.run(debug=True)

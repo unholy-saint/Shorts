@@ -1,46 +1,35 @@
-from selenium import webdriver
+import csv
+import requests
+import pandas as pd
 from bs4 import BeautifulSoup as bs
 
 url = 'https://en.wikipedia.org/wiki/List_of_brightest_stars_and_other_record_stars'
-browser = webdriver.Chrome('chromedriver.exe')
+browser = requests.get(url)
 
-browser.get(url)
+html = bs(browser.text, 'html.parser')
+temp = []
 
+table = html.find('table')
+tr = table.find_all('tr')
 
-def scraping():
-    headers = [
-        'Proper name', "Distance (ly)", "Mass", "Radius"
-    ]
+headers = ['Proper name', "Distance (ly)", "Mass", "Radius"]
+Proper_name = []
+Distance = []
+Mass = []
+Radius = []
 
-    temp_list = []
+for tag in tr:
+    td = tag.find_all('td')
+    stripped = [i.text.strip() for i in td]
+    temp.append(stripped)
 
-    for i in range(10):
-        html = bs(browser.page_source, 'html.parser')
+for i in range(1, len(temp)):
+    Proper_name.append(temp[i][1])
+    Distance.append(temp[i][3])
+    Mass.append(temp[i][5])
+    Radius.append(temp[i][6])
 
-        for tr in html.find_all('tr'):
-            td = tr.find_all('td')
+df = pd.DataFrame(
+    list(zip(Proper_name, Distance, Mass, Radius)), columns=headers)
 
-            for index, tag in enumerate(td):
-                if index == 1:
-                    temp_list.append(tag.find_all('a')[0].contents[0])
-
-                elif index == 3:
-                    try:
-                        temp_list.append(tag.contents[0])
-                    except:
-                        temp_list.append('')
-
-                elif index == 5:
-                    try:
-                        temp_list.append(tag.contents[0])
-                    except:
-                        temp_list.append('')
-
-                elif index == 6:
-                    try:
-                        temp_list.append(tag.contents[0])
-                    except:
-                        temp_list.append('')
-
-
-scraping()
+df.to_csv('planet.csv')
